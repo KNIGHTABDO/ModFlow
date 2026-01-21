@@ -1,13 +1,19 @@
 {
   "name": "moodflow",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "A premium dark-mode web app for emotional journey tracking with AI-powered insights",
+  "author": "KNIGHTABDO",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "clean": "rm -rf dist node_modules/.vite"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18",
@@ -36,5 +42,14 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
-  }
+  },
+  "keywords": [
+    "mood-tracking",
+    "emotional-health",
+    "ai",
+    "react",
+    "firebase",
+    "typescript",
+    "tailwindcss"
+  ]
 }
