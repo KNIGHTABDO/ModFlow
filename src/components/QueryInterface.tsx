@@ -21,8 +21,6 @@ export default function QueryInterface({ entries }: QueryInterfaceProps) {
     try {
       const result = await handleNaturalLanguageQuery(query, { entries });
       setResponse(result);
-    } catch (error) {
-      setResponse('Sorry, I encountered an error processing your question.');
     } finally {
       setLoading(false);
     }

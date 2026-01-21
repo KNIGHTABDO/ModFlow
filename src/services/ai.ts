@@ -15,10 +15,15 @@ export interface MoodAnalysis {
   summary: string;
 }
 
+interface AIMessage {
+  role: string;
+  content: string;
+}
+
 const API_ENDPOINT = import.meta.env.VITE_GITHUB_MODEL_ENDPOINT || 'https://models.inference.ai.azure.com';
 const API_KEY = import.meta.env.VITE_GITHUB_TOKEN || '';
 
-async function callAI(messages: any[], temperature = 0.7, maxTokens = 1000): Promise<string> {
+async function callAI(messages: AIMessage[], temperature = 0.7, maxTokens = 1000): Promise<string> {
   if (!API_KEY) {
     console.warn('GitHub API token not configured');
     throw new Error('AI service not configured');
@@ -45,9 +50,9 @@ async function callAI(messages: any[], temperature = 0.7, maxTokens = 1000): Pro
 
     const data = await response.json();
     return data.choices[0]?.message?.content || '';
-  } catch (error) {
-    console.error('AI API call failed:', error);
-    throw error;
+  } catch (err) {
+    console.error('AI API call failed:', err);
+    throw err;
   }
 }
 
@@ -55,7 +60,7 @@ async function callAI(messages: any[], temperature = 0.7, maxTokens = 1000): Pro
  * Analyzes behavioral metadata to infer emotional patterns
  */
 export async function analyzeEmotionalPatterns(
-  metadata: any[]
+  metadata: unknown[]
 ): Promise<MoodAnalysis> {
   try {
     const prompt = `Analyze the following behavioral metadata and provide emotional insights:
@@ -85,8 +90,8 @@ Respond in JSON format matching the MoodAnalysis interface.`;
     }
 
     return JSON.parse(content);
-  } catch (error) {
-    console.error('Error analyzing emotional patterns:', error);
+  } catch (err) {
+    console.error('Error analyzing emotional patterns:', err);
     // Return fallback analysis
     return {
       dominantMood: 'neutral',
@@ -102,7 +107,7 @@ Respond in JSON format matching the MoodAnalysis interface.`;
  */
 export async function handleNaturalLanguageQuery(
   query: string,
-  context: any
+  context: unknown
 ): Promise<string> {
   try {
     const content = await callAI([
@@ -117,8 +122,8 @@ export async function handleNaturalLanguageQuery(
     ], 0.8, 500);
 
     return content || 'I apologize, but I could not process your query at this time.';
-  } catch (error) {
-    console.error('Error handling query:', error);
+  } catch (err) {
+    console.error('Error handling query:', err);
     return 'I apologize, but I encountered an error processing your question. Please try again.';
   }
 }
@@ -126,7 +131,7 @@ export async function handleNaturalLanguageQuery(
 /**
  * Generates personalized insights based on mood data
  */
-export async function generateInsights(moodData: any[]): Promise<string[]> {
+export async function generateInsights(moodData: unknown[]): Promise<string[]> {
   try {
     const content = await callAI([
       {
@@ -142,9 +147,10 @@ export async function generateInsights(moodData: any[]): Promise<string[]> {
     if (!content) return [];
 
     return content.split('\n').filter((line: string) => line.trim().length > 0);
-  } catch (error) {
-    console.error('Error generating insights:', error);
+  } catch (err) {
+    console.error('Error generating insights:', err);
     return [];
   }
 }
+
 

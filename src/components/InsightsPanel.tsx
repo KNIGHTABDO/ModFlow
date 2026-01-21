@@ -14,21 +14,18 @@ export default function InsightsPanel({ entries }: InsightsPanelProps) {
 
   useEffect(() => {
     if (entries.length >= 5) {
-      analyzeEntries();
+      const analyze = async () => {
+        setLoading(true);
+        try {
+          const result = await analyzeEmotionalPatterns(entries.slice(0, 20));
+          setAnalysis(result);
+        } finally {
+          setLoading(false);
+        }
+      };
+      analyze();
     }
   }, [entries]);
-
-  const analyzeEntries = async () => {
-    setLoading(true);
-    try {
-      const result = await analyzeEmotionalPatterns(entries.slice(0, 20));
-      setAnalysis(result);
-    } catch (error) {
-      console.error('Analysis error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (entries.length < 5) {
     return (
